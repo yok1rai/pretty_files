@@ -1,19 +1,18 @@
 use std::env;
-use pretty_files::Commands;
+use pretty_files::Command;
+use std::process;
 
 fn main() {
     let args: Vec<String> = env::args().collect();
-    if args.len() > 1 {
-
-        let command = Commands::new(args);
-
-        match command.args[1].trim() {
-            "read" => command.read_file().unwrap_or_else(|e| eprintln!("{}", e)),
-            _ => {
-                eprintln!("invalid operation");
-            }
+    let command = match Command::new(args) {
+        Ok(ok) => ok,
+        Err(()) => process::exit(1)
+    };
+    match command.command_str().trim() {
+        "read" => command.read_file().unwrap_or_else(|e| eprintln!("{e}")),
+        _ => {
+            eprintln!("invalid entry"); 
         }
-    } else {
-        eprintln!("not enough arguments");
     }
 }
+
