@@ -24,30 +24,35 @@ impl Command {
             return Ok(());
         }
         let mut count_lines = false;
+        let mut debug = false;
+        let mut debug_allowed = true;
         let mut files = Vec::new();
 
         for arg in &self.args[2..] {
             match arg.as_str() {
-                "-n" => count_lines = true,
+                "-n" | "--numbers" => count_lines = true,
+                "-d" | "--debug" => debug = true,
+                "-!d" | "!--debug" => debug_allowed = false,
                 _ => files.push(arg),
             }
         }
-
-        if count_lines {
+        if files.len() < 3 && debug_allowed {
+            debug = true;
+        }
             for file in files {
-                println!("\n=== {file} ===\n");
+                if debug {
+                    println!("\n=== {file} ===\n");
+                }
                 let content = fs::read_to_string(file)?;
-                for (i, line) in content.lines().enumerate() {
-                    println!("{}: {}", i + 1, line);
+
+                if count_lines {
+                    for (i, line) in content.lines().enumerate() {
+                        println!("{}: {}", i + 1, line);
+                    }
+                } else {
+                    println!("{content}");
                 }
             }
-        } else {
-            for file in files {
-                println!("\n=== {file} ===\n");
-                let content = fs::read_to_string(file)?;
-                println!("{content}");
-            }
-        }
 
         Ok(())
     }
