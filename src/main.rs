@@ -10,8 +10,10 @@ fn main() {
     };
     match command.command_str().trim() {
         "read" => command.read_file().unwrap_or_else(|e| eprintln!("{e}")),
+        "help" => Command::help(),
         _ => {
-            eprintln!("invalid entry"); 
+            eprintln!("invalid entry");
+            Command::help();
         }
     }
 }
