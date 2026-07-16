@@ -1,2 +1,5 @@
 /target
-/samples 
+/ignored
+/pkg
+*.pkg.tar.zst.sig
+*.pkg.tar.zst
