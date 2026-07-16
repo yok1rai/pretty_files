@@ -1,20 +1,22 @@
 use std::fs;
 use walkdir::WalkDir;
 use std::path::{Path, PathBuf};
+use syntect::{
+    easy::HighlightLines, highlighting::ThemeSet, parsing::SyntaxSet, util::{LinesWithEndings, as_24_bit_terminal_escaped}
+};
 
 pub struct Command {
-    args: Vec<String>,
-    command: String,
+    args: Vec<String>
 }
 
 const HELP: &str = r#"pretty_files - Simple file viewer
 
 USAGE:
-    pretty_files <COMMAND> [OPTIONS] <FILES...>
+    pretty_files [SPECIAL COMMANDS] [OPTIONS] <FILES...>
 
-COMMANDS:
-    read                Read and print one or more files.
-    help                Show this help message.
+
+SPECIAL COMMANDS:
+    help                Read help menu 
 
 OPTIONS:
     -n, --numbers       Show line numbers.
@@ -23,11 +25,12 @@ OPTIONS:
     !d, !debug          Disable automatic debug mode.
 
 EXAMPLES:
-    pretty_files read file.txt
-    pretty_files read file1.txt file2.txt
-    pretty_files read -n file.txt
-    pretty_files read -r ./src
-    pretty_files read -r -n ./src
+    pretty_files file.txt
+    pretty_files file1.txt file2.txt
+    pretty_files n file.txt
+    pretty_files -r ./src
+    pretty_files -r -n ./src
+    pretty_files
     pretty_files help
 
 NOTES:
@@ -36,17 +39,8 @@ NOTES:
 "#;
 
 impl Command {
-    pub fn new(args: Vec<String>) -> Result<Self, ()> {
-        if args.len() < 2 {
-            eprintln!("you must specify the command");
-            Err(())
-        } else {
-            let command = args[1].clone();
-            Ok(Self { args, command } )
-        }
-    }
-    pub fn command_str(&self) -> &str {
-        &self.command
+    pub fn new(args: Vec<String>) -> Self {
+        Self { args }
     }
     fn recursive_search(root: impl AsRef<Path>) -> Vec<PathBuf> {
         WalkDir::new(root)
@@ -55,25 +49,44 @@ impl Command {
             .filter(|result| result.file_type().is_file())
             .map(|entry| entry.into_path())
             .collect()
-
     }
-    pub fn read_file(&self) -> std::io::Result<()> {
-        if self.args.len() < 3 {
-            eprintln!("you must specify the path");
-            return Ok(());
+    pub fn first_arg(&self) -> Option<&str> {
+        self.args.get(1).map(String::as_str)
+    }
+    fn highlight_path(path: &Path, content: &str) -> Vec<String> {
+        let ps = SyntaxSet::load_defaults_newlines();
+        let ts = ThemeSet::load_defaults();
+        let syntax = ps
+            .find_syntax_for_file(path)
+            .unwrap()
+            .unwrap_or_else(|| ps.find_syntax_plain_text());
+
+        let theme = &ts.themes["base16-ocean.dark"];
+        let mut highlighter = HighlightLines::new(syntax, theme);
+        let mut highlighted = Vec::new();
+        for line in LinesWithEndings::from(content) {
+            let ranges = highlighter.highlight_line(line, &ps).unwrap();
+            highlighted.push(as_24_bit_terminal_escaped(&ranges, false));
         }
+
+        highlighted
+    }
+
+    pub fn read_file(&self) -> std::io::Result<()> {
         let mut count_lines = false;
         let mut debug = false;
         let mut debug_allowed = true;
         let mut recursive = false;
+        let mut syntax_highlight = true;
         let mut files = Vec::new();
 
-        for arg in &self.args[2..] {
+        for arg in &self.args[1..] {
             match arg.as_str() {
                 "-n" | "--numbers" => count_lines = true,
                 "-d" | "--debug" => debug = true,
                 "-r" | "--recursive" => recursive = true,
-                "!d" | "!debug" => debug_allowed = false,
+                "-S" => syntax_highlight = false,
+                "-D" => debug_allowed = false,
                 _ => files.push(PathBuf::from(arg)),
             }
         }
@@ -90,25 +103,37 @@ impl Command {
                 }
             }
         }
-            for file in &files {
-                let content: String = fs::read_to_string(file)?;
-                if debug {
-                    println!("\n=== {} ===\n", file.display());
-                }
+        for file in &files {
+            let content = fs::read_to_string(file)?;
 
-                if count_lines {
-                    for (i, line) in content.lines().enumerate() {
-                        println!("{}: {}", i + 1, line);
+            if debug {
+                println!("\n=== {} ===\n", file.display());
+            }
+
+            if syntax_highlight {
+                let highlighted = Command::highlight_path(file.as_path(), &content);
+
+                for (i, line) in highlighted.iter().enumerate() {
+                    if count_lines {
+                        print!("{:>4}. {}", i + 1, line);
+                    } else {
+                        print!("{line}");
                     }
-                } else {
-                    println!("{content}");
+                }
+            } else {
+                for (i, line) in content.lines().enumerate() {
+                    if count_lines {
+                        println!("{:>4}. {}", i + 1, line);
+                    } else {
+                        println!("{line}");
+                    }
                 }
             }
+        }
 
         Ok(())
     }
     pub fn help() {
         println!("{HELP}");
     }
-
 }

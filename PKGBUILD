@@ -5,7 +5,7 @@ pkgdesc="A simple text file viewer"
 arch=("x86_64")
 license=("MIT")
 depends=("glibc")
-makedepends=("cargo")
+makedepends=("cargo" "oniguruma")
 build() {
     cargo build --release
 }
