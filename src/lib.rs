@@ -19,6 +19,7 @@ USAGE:
 
 SPECIAL COMMANDS:
     help                Read help menu
+    binary              Read binary file
 
 OPTIONS:
     -n, --numbers       Show line numbers.
@@ -148,5 +149,8 @@ impl Command {
     }
     pub fn help() {
         println!("{HELP}");
+    }
+    pub fn binary(&self) {
+        println!("not implemented yet");
     }
 }

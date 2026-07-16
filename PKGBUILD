@@ -6,6 +6,7 @@ arch=("x86_64")
 license=("MIT")
 depends=("glibc")
 makedepends=("cargo" "oniguruma")
+
 build() {
     cargo build --release
 }
