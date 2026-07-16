@@ -6,7 +6,9 @@ use syntect::{
 };
 
 pub struct Command {
-    args: Vec<String>
+    args: Vec<String>,
+    syntax_set: SyntaxSet,
+    theme_set: ThemeSet,
 }
 
 const HELP: &str = r#"pretty_files - Simple file viewer
@@ -16,7 +18,7 @@ USAGE:
 
 
 SPECIAL COMMANDS:
-    help                Read help menu 
+    help                Read help menu
 
 OPTIONS:
     -n, --numbers       Show line numbers.
@@ -40,7 +42,10 @@ NOTES:
 
 impl Command {
     pub fn new(args: Vec<String>) -> Self {
-        Self { args }
+        let ps = SyntaxSet::load_defaults_newlines();
+        let ts = ThemeSet::load_defaults();
+
+        Self { args, syntax_set: ps, theme_set: ts }
     }
     fn recursive_search(root: impl AsRef<Path>) -> Vec<PathBuf> {
         WalkDir::new(root)
@@ -53,19 +58,27 @@ impl Command {
     pub fn first_arg(&self) -> Option<&str> {
         self.args.get(1).map(String::as_str)
     }
-    fn highlight_path(path: &Path, content: &str) -> Vec<String> {
-        let ps = SyntaxSet::load_defaults_newlines();
-        let ts = ThemeSet::load_defaults();
-        let syntax = ps
+    fn highlight_path(&self, path: &Path, content: &str) -> Vec<String> {
+        let syntax = self
+            .syntax_set
             .find_syntax_for_file(path)
             .unwrap()
-            .unwrap_or_else(|| ps.find_syntax_plain_text());
+            .unwrap_or_else(|| self.syntax_set.find_syntax_plain_text());
 
-        let theme = &ts.themes["base16-ocean.dark"];
+        let theme = self
+            .theme_set
+            .themes
+            .get("base16-ocean.dark")
+            .unwrap();
+
         let mut highlighter = HighlightLines::new(syntax, theme);
+
         let mut highlighted = Vec::new();
+
         for line in LinesWithEndings::from(content) {
-            let ranges = highlighter.highlight_line(line, &ps).unwrap();
+            let ranges = highlighter
+                .highlight_line(line, &self.syntax_set)
+                .unwrap();
             highlighted.push(as_24_bit_terminal_escaped(&ranges, false));
         }
 
@@ -111,7 +124,7 @@ impl Command {
             }
 
             if syntax_highlight {
-                let highlighted = Command::highlight_path(file.as_path(), &content);
+                let highlighted = self.highlight_path(file.as_path(), &content);
 
                 for (i, line) in highlighted.iter().enumerate() {
                     if count_lines {
