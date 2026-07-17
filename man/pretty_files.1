@@ -1,0 +1,179 @@
+.TH PRETTY_FILES 1 "July 2026" "pretty_files 1.2.0" "User Commands"
+
+.SH NAME
+pretty_files \- lightweight command-line file viewer with syntax highlighting
+
+.SH SYNOPSIS
+
+.B pretty_files
+.RI [ OPTIONS ] " " <PATHS...>
+
+.br
+
+.B pretty_files
+.B bare
+.RI [ OPTIONS ] " " <DIRECTORIES...>
+
+.br
+
+.B pretty_files
+.B help
+
+.br
+
+.B pretty_files
+.B binary
+
+.SH DESCRIPTION
+
+.B pretty_files
+is a lightweight command-line file viewer written in Rust.
+It displays files with syntax highlighting, optional line numbers,
+and recursive directory traversal.
+
+Files are automatically detected by their extension.
+Unsupported file types are displayed as plain text.
+
+.SH COMMANDS
+
+.TP
+.B help
+Display the general help menu.
+
+.TP
+.B bare
+List file paths instead of displaying file contents.
+Useful for piping file lists into other commands.
+
+.TP
+.B binary
+View binary files.
+This feature is currently not implemented.
+
+.SH READ MODE
+
+Read mode is the default mode.
+It displays the contents of one or more files.
+
+.SS Options
+
+.TP
+.BR \-n ", " \-\-numbers
+Display line numbers before each line.
+
+.TP
+.BR \-r ", " \-\-recursive
+Recursively search directories and display all discovered files.
+
+.TP
+.BR \-d ", " \-\-debug
+Display file names before their contents.
+
+.TP
+.B \-D
+Disable automatic debug mode.
+
+Automatic debug mode is enabled when multiple files are displayed.
+
+.TP
+.B \-S
+Disable syntax highlighting.
+
+.SS Examples
+
+.TP
+Display a file:
+.B pretty_files main.rs
+
+.TP
+Display multiple files:
+.B pretty_files main.rs Cargo.toml
+
+.TP
+Display with line numbers:
+.B pretty_files -n main.rs
+
+.TP
+Display all files in a directory recursively:
+.B pretty_files -r src/
+
+.TP
+Disable syntax highlighting:
+.B pretty_files -S file.txt
+
+
+.SH BARE MODE
+
+The
+.B bare
+command prints file paths without reading file contents.
+
+.SS Synopsis
+
+.B pretty_files bare
+.RI [ OPTIONS ] " " <DIRECTORIES...>
+
+.SS Options
+
+.TP
+.BR \-r ", " \-\-recursive
+Recursively search directories and print all discovered files.
+
+.SS Examples
+
+.TP
+List files in a directory:
+.B pretty_files bare src/
+
+.TP
+List files recursively:
+.B pretty_files bare -r src/
+
+.TP
+Use output in a shell loop:
+.nf
+for file in $(pretty_files bare -r src/); do
+    cat "$file"
+done
+.fi
+
+
+.SH BINARY MODE
+
+The
+.B binary
+command is reserved for future binary file support.
+
+.SH NOTES
+
+.TP
+Automatic debug mode is enabled when displaying multiple files.
+Use
+.B \-D
+to disable it.
+
+.TP
+The
+.B \-r
+option expects directories as input.
+
+.TP
+Files with unknown extensions are displayed as plain text.
+
+.SH DEPENDENCIES
+
+.TP
+.B syntect
+Provides syntax highlighting and language detection.
+
+.TP
+.B walkdir
+Provides recursive directory traversal.
+
+.SH AUTHOR
+
+Written by yok1rai.
+
+.SH LICENSE
+
+GNU General Public License v3.0

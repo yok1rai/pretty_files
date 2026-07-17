@@ -1,5 +1,5 @@
 pkgname='pretty_files'
-pkgver=1.2.0.r15.13c456d
+pkgver=1.2.0.r17.7ff1bb4
 pkgrel=1
 pkgdesc='A simple cat-like syntax highlighting file viewer'
 arch=('x86_64')
@@ -12,7 +12,10 @@ sha256sums=('SKIP')
 
 pkgver() {
   cd "$srcdir/$pkgname"
-  printf "%s.r%s.%s" "$(cat Cargo.toml | grep -m1 '^version' | cut -d'"' -f2)" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+  printf "%s.r%s.%s" \
+    "$(grep -m1 '^version' Cargo.toml | cut -d'"' -f2)" \
+    "$(git rev-list --count HEAD)" \
+    "$(git rev-parse --short HEAD)"
 }
 
 build() {
@@ -21,6 +24,11 @@ build() {
 }
 
 package() {
-  install -Dm755 "$srcdir/$pkgname/target/release/$pkgname" \
+  cd "$srcdir/$pkgname"
+
+  install -Dm755 "target/release/$pkgname" \
     "$pkgdir/usr/bin/$pkgname"
+
+  install -Dm644 "man/$pkgname.1" \
+    "$pkgdir/usr/share/man/man1/$pkgname.1"
 }
