@@ -6,6 +6,22 @@ All notable changes to **pretty_files** are documented in this file.
 
 ---
 
+## [1.2.0] — Improved help menu
+
+### Added
+
+* Added command-specific help menus for better readability.
+* Added dedicated help sections for:
+  * General usage
+  * File reading mode
+  * `bare` command usage
+
+### Changed
+
+* Reworked the help system from a single large help page into a structured command-based help interface.
+* Improved help output by showing only relevant options and examples for the selected command.
+* Updated command documentation to match the current CLI structure.
+
 ## [1.1.0] — Bare Command Feature
 
 ### Added

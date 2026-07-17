@@ -1,6 +1,6 @@
-# Pretty Files v1.1
+# Pretty Files v1.2
 
-**Pretty Files** is a lightweight command-line file viewer written in Rust. It displays files with syntax highlighting, optional line numbers, and recursive directory support, making it a convenient alternative to `cat` for viewing source code.
+**Pretty Files** is a lightweight command-line file viewer written in Rust. It displays files with syntax highlighting, optional line numbers, and recursive directory support, providing a simple and convenient alternative to tools like `cat` for viewing source code.
 
 ## Features
 
@@ -8,7 +8,8 @@
 * Recursive directory traversal
 * Optional line numbers
 * Automatic debug headers when viewing multiple files
-* Zero configuration — just point it at a file and go
+* File path listing through the `bare` command
+* Zero configuration — point it at a file and start reading
 
 ## Installation
 
@@ -30,13 +31,13 @@ cd pretty_files
 cargo build --release
 ```
 
-The compiled binary will be located at:
+The compiled binary will be available at:
 
 ```text
 target/release/pretty_files
 ```
 
-Or install it directly with Cargo:
+You can also install it directly with Cargo:
 
 ```bash
 cargo install --path .
@@ -45,70 +46,71 @@ cargo install --path .
 ## Usage
 
 ```text
-pretty_files [SPECIAL COMMAND] [OPTIONS] <FILES...>
+pretty_files [COMMAND] [OPTIONS] <PATHS...>
 ```
 
-## Special Commands
+## Commands
 
-| Command  | Description                                                                      |
-| -------- | -------------------------------------------------------------------------------- |
-| `help`   | Display the built-in help menu.                                                  |
-| `bare`   | List files contained in one or more directories without printing their contents. (new feature) |
-| `binary` | Read binary files *(currently not implemented).*                                 |
+| Command  | Description                                                                     |
+| -------- | ------------------------------------------------------------------------------- |
+| `help`   | Display the general help menu.                                                  |
+| `bare`   | Print file paths from one or more directories without displaying file contents. |
+| `binary` | Read binary files *(currently not implemented).*                                |
 
 ## Options
 
-| Flag                | Description                                         |
-| ------------------- | --------------------------------------------------- |
-| `-n`, `--numbers`   | Display line numbers.                               |
-| `-r`, `--recursive` | Search directories recursively.                      |
-| `-d`, `--debug`     | Display filenames as headers before their contents. |
-| `-D`                | Disable automatic debug mode.                       |
-| `-S`                | Disable syntax highlighting.                        |
+| Flag                | Description                             |
+| ------------------- | --------------------------------------- |
+| `-n`, `--numbers`   | Display line numbers.                   |
+| `-r`, `--recursive` | Search directories recursively.         |
+| `-d`, `--debug`     | Display filenames before file contents. |
+| `-D`                | Disable automatic debug mode.           |
+| `-S`                | Disable syntax highlighting.            |
 
 ## Examples
 
 ```bash
-# Print a single file
+# Display a single file
 pretty_files file.txt
 
-# Print multiple files
+# Display multiple files
 pretty_files file1.txt file2.txt
 
-# Print a file with line numbers
+# Display a file with line numbers
 pretty_files -n file.txt
 
-# Print every file inside a directory recursively
+# Recursively display files inside a directory
 pretty_files -r ./src
 
-# Recursive output with line numbers
+# Recursive reading with line numbers
 pretty_files -r -n ./src
 
 # Display the help menu
 pretty_files help
 
-# List every file inside a directory
+# List files inside a directory
 pretty_files bare src
 
-# List every file recursively
+# Recursively list files
 pretty_files bare -r src
 ```
 
 ## Notes
 
-* When viewing fewer than **three files**, debug mode is enabled automatically so each file is preceded by its filename. Use `-D` to disable this behavior.
-* Syntax highlighting is selected automatically based on each file's extension.
-* Files with unrecognized extensions are displayed as plain text.
-* Directories supplied with `-r` are searched recursively.
+* When multiple files are displayed, debug mode is enabled automatically to separate each file's output with a filename header.
+* Use `-D` to disable automatic debug headers.
+* Syntax highlighting is detected automatically using each file's extension.
+* Files with unsupported or unknown extensions are displayed as plain text.
+* The `-r` option expects directories and searches all files inside them recursively.
 
 ## Dependencies
 
-* **syntect** — Syntax highlighting.
-* **walkdir** — Recursive directory traversal.
+* **syntect** — Provides syntax highlighting and language detection.
+* **walkdir** — Provides recursive directory traversal.
 
 ## Contributing
 
-Contributions are welcome! If you add or modify a command or option, please keep the built-in help text in `src/lib.rs` synchronized with the documentation.
+Contributions are welcome! If you add or modify commands or options, please keep the built-in help messages in `src/lib.rs` synchronized with this documentation.
 
 ## License
 
