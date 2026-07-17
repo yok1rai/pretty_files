@@ -45,7 +45,7 @@ pretty_files [SPECIAL COMMANDS] [OPTIONS] <FILES...>
 | Command  | Description       |
 |----------|-------------------|
 | `help`   | Show the help menu |
-| `binary` | Read a binary file (not yet implemented) |
+| `binary` | Read a binary file (not implemented yet) |
 
 ### Options
 

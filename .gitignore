@@ -3,3 +3,6 @@
 /pkg
 *.pkg.tar.zst.sig
 *.pkg.tar.zst
+/pretty_files
+/pkg
+/src/pretty_files 
