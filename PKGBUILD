@@ -1,5 +1,5 @@
 pkgname='pretty_files'
-pkgver=1.5.0.r12.01c2784
+pkgver=1.1.0.r15.13c456d
 pkgrel=1
 pkgdesc='A simple cat-like syntax highlighting file viewer'
 arch=('x86_64')
