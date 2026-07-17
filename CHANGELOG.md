@@ -4,6 +4,13 @@ All notable changes to **pretty_files** are documented in this file.
 
 > **Note:** During development, each milestone corresponded to a single commit. The project was officially released as **v1.4.0**, making it the first public release.
 
+## [1.5.0] — Added Ignore Option
+
+### Added
+
+* Added the `-i` / `--ignore` option to exclude specified files or paths from processing. The option may be used multiple times.
+* Added the `version` command to display the current version of **pretty_files**.
+
 ---
 ## [1.4.0] — Better Error Handling
 

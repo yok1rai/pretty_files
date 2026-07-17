@@ -56,6 +56,7 @@ pretty_files [COMMAND] [OPTIONS] <PATHS...>
 | `help`   | Display the general help menu.                                                  |
 | `bare`   | Print file paths from one or more directories without displaying file contents. |
 | `binary` | Read binary files *(currently not implemented).*                                |
+| `version`| Print the version number
 
 ## Options
 
@@ -66,6 +67,7 @@ pretty_files [COMMAND] [OPTIONS] <PATHS...>
 | `-d`, `--debug`     | Display filenames before file contents. |
 | `-D`                | Disable automatic debug mode.           |
 | `-S`                | Disable syntax highlighting.            |
+| `-i`  `--ignore`    | Ignore the following file.              |
 
 ## Examples
 

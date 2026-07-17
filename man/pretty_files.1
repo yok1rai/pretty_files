@@ -1,4 +1,4 @@
-.TH PRETTY_FILES 1 "July 2026" "pretty_files 1.3.0" "User Commands"
+.TH PRETTY_FILES 1 "July 2026" "pretty_files 1.5.0" "User Commands"
 
 .SH NAME
 pretty_files \- lightweight command-line file viewer with syntax highlighting
@@ -27,47 +27,45 @@ pretty_files \- lightweight command-line file viewer with syntax highlighting
 .SH DESCRIPTION
 
 .B pretty_files
-is a lightweight command-line file viewer written in Rust.
-It displays files with syntax highlighting, optional line numbers,
-and recursive directory traversal.
+is a lightweight command-line file viewer written in Rust. It displays
+text files with syntax highlighting, optional line numbers, recursive
+directory traversal, and file filtering.
 
-Files are automatically detected by their extension.
-Unsupported file types are displayed as plain text.
+Syntax highlighting is automatically selected based on the file type.
+Files with unsupported or unknown extensions are displayed as plain text.
 
 .SH COMMANDS
 
 .TP
 .B help
-Display the general help menu.
+Display the help menu.
 
 .TP
 .B bare
-List file paths instead of displaying file contents.
+Print file paths without displaying their contents.
 Useful for piping file lists into other commands.
 
 .TP
 .B binary
-View binary files.
-This feature is currently not implemented.
+Reserved for future binary file support.
 
 .SH READ MODE
 
-Read mode is the default mode.
-It displays the contents of one or more files.
+Read mode is the default mode and displays the contents of one or more files.
 
 .SS Options
 
 .TP
 .BR \-n ", " \-\-numbers
-Display line numbers before each line.
+Display line numbers.
 
 .TP
 .BR \-r ", " \-\-recursive
-Recursively search directories and display all discovered files.
+Recursively search directories for files.
 
 .TP
 .BR \-d ", " \-\-debug
-Display file names before their contents.
+Print the file name before displaying its contents.
 
 .TP
 .B \-D
@@ -78,6 +76,10 @@ Automatic debug mode is enabled when multiple files are displayed.
 .TP
 .B \-S
 Disable syntax highlighting.
+
+.TP
+.BR \-i ", " \-\-ignore " " <PATH>
+Ignore a file or path. This option may be specified multiple times.
 
 .SS Examples
 
@@ -90,23 +92,30 @@ Display multiple files:
 .B pretty_files main.rs Cargo.toml
 
 .TP
-Display with line numbers:
-.B pretty_files -n main.rs
+Display line numbers:
+.B pretty_files -n src/main.rs
 
 .TP
-Display all files in a directory recursively:
+Display all files recursively:
 .B pretty_files -r src/
 
 .TP
 Disable syntax highlighting:
 .B pretty_files -S file.txt
 
+.TP
+Ignore a file while searching recursively:
+.B pretty_files -r -i src/lib.rs src/
+
+.TP
+Ignore multiple files:
+.B pretty_files -r -i src/lib.rs -i src/main.rs src/
 
 .SH BARE MODE
 
 The
 .B bare
-command prints file paths without reading file contents.
+command prints file paths without reading or displaying file contents.
 
 .SS Synopsis
 
@@ -117,7 +126,12 @@ command prints file paths without reading file contents.
 
 .TP
 .BR \-r ", " \-\-recursive
-Recursively search directories and print all discovered files.
+Recursively list files inside directories.
+
+.TP
+.BR \-i ", " \-\-ignore " " <PATH>
+Ignore a file or path while listing files.
+This option may be specified multiple times.
 
 .SS Examples
 
@@ -130,13 +144,20 @@ List files recursively:
 .B pretty_files bare -r src/
 
 .TP
-Use output in a shell loop:
+Ignore a file:
+.B pretty_files bare -r -i src/lib.rs src/
+
+.TP
+Ignore multiple files:
+.B pretty_files bare -r -i src/lib.rs -i src/main.rs src/
+
+.TP
+Use the output in a shell loop:
 .nf
 for file in $(pretty_files bare -r src/); do
     cat "$file"
 done
 .fi
-
 
 .SH BINARY MODE
 
@@ -158,7 +179,7 @@ The
 option expects directories as input.
 
 .TP
-Files with unknown extensions are displayed as plain text.
+Files with unknown or unsupported extensions are displayed as plain text.
 
 .SH DEPENDENCIES
 

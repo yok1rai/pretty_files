@@ -10,6 +10,7 @@ fn main() {
                 "help" => command.help(),
                 "binary" => command.binary(),
                 "bare" => command.bare_read().unwrap(),
+                "version" => Command::version(),
                 _ => command.read_file().unwrap()
             }
         },

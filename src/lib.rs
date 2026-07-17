@@ -8,6 +8,8 @@ use syntect::{
 };
 use walkdir::WalkDir;
 
+const VERSION: &str = "v1.5.0";
+
 enum CommandHelp {
     Read,
     Bare,
@@ -42,18 +44,23 @@ impl Command {
             _ => Ok(CommandHelp::Read),
         }
     }
-
-    fn recursive_search(root: impl AsRef<Path>) -> Vec<PathBuf> {
+    fn recursive_search(root: impl AsRef<Path>, ignored: &[String]) -> Vec<PathBuf> {
         WalkDir::new(root)
             .into_iter()
+            .filter_entry(|entry| {
+                let path = entry.path().to_string_lossy();
+                !ignored.iter().any(|i| path.ends_with(i))
+            })
             .filter_map(Result::ok)
-            .filter(|result| result.file_type().is_file())
+            .filter(|entry| entry.file_type().is_file())
             .map(|entry| entry.into_path())
             .collect()
     }
+
     pub fn first_arg(&self) -> Option<&str> {
         self.args.get(1).map(String::as_str)
     }
+
     fn highlight_path(&self, path: &Path, content: &str) -> Vec<String> {
         let syntax = self
             .syntax_set
@@ -82,28 +89,38 @@ impl Command {
         let mut recursive = false;
         let mut syntax_highlight = true;
         let mut files = Vec::new();
+        let mut ignored = Vec::new();
 
         if self.args[1].as_str() == "--help" {
             self.help();
             return Ok(());
         }
 
-        for arg in &self.args[1..] {
-            match arg.as_str() {
-                "-n" | "--numbers" => count_lines = true,
-                "-d" | "--debug" => debug = true,
-                "-r" | "--recursive" => recursive = true,
-                "-S" => syntax_highlight = false,
-                "-D" => debug_allowed = false,
-                _ => files.push(PathBuf::from(arg)),
-            }
+        let mut args = self.args[1..].iter();
+        while let Some(arg) = args.next() {
+                match arg.as_str() {
+                    "-n" | "--numbers" => count_lines = true,
+                    "-d" | "--debug" => debug = true,
+                    "-r" | "--recursive" => recursive = true,
+                    "-S" => syntax_highlight = false,
+                    "-D" => debug_allowed = false,
+                    "-i" | "--ignore" => {
+                        if let Some(name) = args.next() {
+                            ignored.push(name.clone());
+                        } else {
+                            eprintln!("missing argument for --ignore");
+                            return Ok(())
+                        }
+                    }
+                    _ => files.push(PathBuf::from(arg)),
+                }
         }
 
         if recursive {
             let directories = files.clone();
             files.clear();
             for directory in directories {
-                for file in Command::recursive_search(directory) {
+                for file in Command::recursive_search(directory, &ignored) {
                     files.push(file);
                 }
             }
@@ -136,6 +153,11 @@ impl Command {
                     continue;
                 }
             };
+            let path = file.to_string_lossy();
+
+            if ignored.iter().any(|i| path.ends_with(i)) {
+                continue;
+            }
 
             if debug {
                 println!("\n=== {} ===\n", file.display());
@@ -167,6 +189,7 @@ impl Command {
     pub fn bare_read(&self) -> std::io::Result<()> {
         let mut recursive = false;
         let mut directories = Vec::new();
+        let mut ignored = Vec::new();
         match self.args.get(2) {
             Some(help) => {
                 if help.as_str() == "--help" {
@@ -176,10 +199,21 @@ impl Command {
             },
             None => {}
         }
-        for arg in &self.args[2..] {
+
+        let mut args = self.args[2..].iter();
+
+        while let Some(arg) = args.next() {
             match arg.as_str() {
                 "-r" | "--recursive" => recursive = true,
-                _ => directories.push(PathBuf::from(arg)),
+                "-i" | "--ignore" => {
+                    if let Some(name) = args.next() {
+                        ignored.push(name.clone());
+                    } else {
+                        eprintln!("missing argument for --ignore");
+                        return Ok(());
+                    }
+                },
+                _ => directories.push(PathBuf::from(arg))
             }
         }
 
@@ -194,7 +228,7 @@ impl Command {
             let tmp_directories = std::mem::take(&mut directories);
 
             for directory in tmp_directories {
-                directories.extend(Command::recursive_search(directory));
+                directories.extend(Command::recursive_search(directory, &ignored));
             }
 
             for file in &directories {
@@ -209,7 +243,12 @@ impl Command {
                 let path = entry.path();
 
                 if path.is_file() {
-                    println!("{}", entry.path().to_string_lossy());
+                    let name = path.to_string_lossy();
+
+                    if ignored.iter().any(|i| i == &name) {
+                        continue;
+                    }
+                    println!("{}", path.display());
                 }
             }
         }
@@ -223,7 +262,7 @@ impl Command {
         };
         match command {
             CommandHelp::Bare => {
-                const HELP: &str = r#"pretty_files 1.3.0 - Bare Mode
+                let help: String = format!(r#"pretty_files {} - Bare Mode
 
 USAGE:
     pretty_files bare [OPTIONS] <DIRECTORIES...>
@@ -234,12 +273,14 @@ DESCRIPTION:
 
 OPTIONS:
     -r, --recursive     Search directories recursively
+    -i  --ignore        Ignore the following file
 
 EXAMPLES:
     pretty_files bare src/
     pretty_files bare src/ target/
     pretty_files bare -r src/
     pretty_files bare -r .
+    pretty_files bare -r src/ -i src/utils.rs
 
 Shell example:
 
@@ -250,11 +291,11 @@ Shell example:
 
 NOTES:
     • Only directories are accepted as input.
-    • With -r, files inside all subdirectories are included."#;
-                println!("{HELP}");
+    • With -r, files inside all subdirectories are included."#, VERSION);
+                println!("{help}");
             }
             CommandHelp::Common => {
-                const HELP: &str = r#"pretty_files 1.3.0 - Simple File Viewer
+                let help: String = format!("pretty_files {} - Simple File Viewer
 
 USAGE:
     pretty_files [COMMAND] [OPTIONS] <PATHS...>
@@ -263,6 +304,7 @@ COMMANDS:
     help                Show this help menu
     bare                Print file paths instead of file contents
     binary              View binary files (coming soon)
+    version             Print the current version number
 
 EXAMPLES:
     pretty_files --help
@@ -271,11 +313,11 @@ EXAMPLES:
 
 NOTES:
     • for more information add `--help` after special commands
-"#;
-                println!("{HELP}");
+", VERSION);
+                println!("{help}");
             }
             CommandHelp::Read => {
-                const HELP: &str = r#"pretty_files 1.3.0 - Read Mode
+                let help: String = format!("pretty_files {} - Read Mode
 
 USAGE:
     pretty_files [OPTIONS] <FILES...>
@@ -286,6 +328,7 @@ OPTIONS:
     -d, --debug         Print file names before their contents
     -D                  Disable automatic debug mode
     -S                  Disable syntax highlighting
+    -i  --ignore        Ignore the following file
 
 EXAMPLES:
     pretty_files main.rs
@@ -293,14 +336,18 @@ EXAMPLES:
     pretty_files -n src/main.rs
     pretty_files -r src/
     pretty_files -r src/ docs/
+    pretty_files -r src/ -i src/utils.rs
 
 NOTES:
     • Automatic debug mode is enabled when reading multiple files.
     • The -r option expects directories as input.
-    • Files discovered recursively are treated like normal input files."#;
-                println!("{HELP}");
+    • Files discovered recursively are treated like normal input files.", VERSION);
+                println!("{help}");
             }
         }
+    }
+    pub fn version() {
+        println!("pretty_files {VERSION}");
     }
     pub fn binary(&self) {
         println!("not implemented yet");
