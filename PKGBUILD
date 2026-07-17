@@ -1,6 +1,6 @@
 pkgname='pretty_files'
-pkgver=1.5.0
-pkgrel=2
+pkgver=1.5.0.r11.49515e0
+pkgrel=1
 pkgdesc='A simple cat-like syntax highlighting file viewer'
 arch=('x86_64')
 url="https://github.com/yok1rai/pretty_files"
