@@ -6,6 +6,13 @@ All notable changes to **pretty_files** are documented in this file.
 
 ---
 
+## [1.1.0] — Bare Command Feature
+
+### Added
+
+- Added the `bare` special command to list file paths inside one or more directories.
+- Added support for recursive directory traversal using the `-r` / `--recursive` option.
+
 ## [1.0.0] — First public release
 
 ### Added

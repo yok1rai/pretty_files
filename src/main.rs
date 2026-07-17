@@ -8,7 +8,10 @@ fn main() {
         Some(arg) => {
             match arg.trim() {
                 "help" => Command::help(),
-                "b" | "binary" => command.binary(),
+                "binary" => command.binary(),
+                "bare" => command.bare_read().unwrap_or_else(|e| {
+                    eprintln!("{e}"); 
+                }),
                 _ => command.read_file().unwrap_or_else(|e| {
                     eprintln!("{e}");
                 })

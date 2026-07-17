@@ -19,7 +19,8 @@ USAGE:
 
 SPECIAL COMMANDS:
     help                Read help menu
-    binary              Read binary file
+    bare                Return file paths
+    binary              Read binary file (not implemented yet)
 
 OPTIONS:
     -n, --numbers       Show line numbers.
@@ -33,7 +34,9 @@ EXAMPLES:
     pretty_files n file.txt
     pretty_files -r ./src
     pretty_files -r -n ./src
-    pretty_files
+    pretty_files bare src/
+    pretty_files bare src/ target/
+    pretty_files bare -r src/
     pretty_files help
 
 NOTES:
@@ -141,6 +144,50 @@ impl Command {
                     } else {
                         println!("{line}");
                     }
+                }
+            }
+        }
+
+        Ok(())
+    }
+    pub fn bare_read(&self) -> std::io::Result<()> {
+        let mut recursive = false;
+        let mut directories = Vec::new();
+
+        for arg in &self.args[2..] {
+            match arg.as_str() {
+                "-r" | "--recursive" => recursive = true,
+                _ => directories.push(PathBuf::from(arg)),
+            }
+        }
+
+        for path in &directories {
+            if !path.is_dir() {
+                eprintln!("{} is not a directory", path.display());
+                return Ok(());
+            }
+        }
+
+        if recursive {
+            let tmp_directories = std::mem::take(&mut directories);
+
+            for directory in tmp_directories {
+                directories.extend(Command::recursive_search(directory));
+            }
+
+            for file in &directories {
+                println!("{}", file.display());
+            }
+            return Ok(());
+        }
+
+        for directory in &directories {
+            for entry in fs::read_dir(directory)? {
+                let entry = entry?;
+                let path = entry.path();
+
+                if path.is_file() {
+                    println!("{}", entry.path().to_string_lossy());
                 }
             }
         }
