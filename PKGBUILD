@@ -1,17 +1,26 @@
-pkgname="pretty_files"
-pkgver=1.0.0
-pkgrel=1
-pkgdesc="A simple text file viewer"
-arch=("x86_64")
-license=("MIT")
+pkgname='pretty_files'
+pkgver=1.5.0
+pkgrel=2
+pkgdesc='A simple cat-like syntax highlighting file viewer'
+arch=('x86_64')
+url="https://github.com/yok1rai/pretty_files"
+license=("GPL")
 depends=("glibc")
-makedepends=("cargo" "oniguruma")
+makedepends=("cargo")
+source=("git+https://github.com/yok1rai/pretty_files.git#branch=main")
+sha256sums=('SKIP')
+
+pkgver() {
+  cd "$srcdir/$pkgname"
+  printf "%s.r%s.%s" "$(cat Cargo.toml | grep -m1 '^version' | cut -d'"' -f2)" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+}
 
 build() {
-    cargo build --release
+  cd "$srcdir/$pkgname"
+  cargo build --release --locked
 }
 
 package() {
-    install -Dm755 "$startdir/target/release/pretty_files" \
-        "$pkgdir/usr/bin/pretty_files"
+  install -Dm755 "$srcdir/$pkgname/target/release/$pkgname" \
+    "$pkgdir/usr/bin/$pkgname"
 }
