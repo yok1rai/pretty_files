@@ -1,9 +1,12 @@
-use std::{fs, process};
-use walkdir::WalkDir;
 use std::path::{Path, PathBuf};
+use std::{fs, process};
 use syntect::{
-    easy::HighlightLines, highlighting::ThemeSet, parsing::SyntaxSet, util::{LinesWithEndings, as_24_bit_terminal_escaped}
+    easy::HighlightLines,
+    highlighting::ThemeSet,
+    parsing::SyntaxSet,
+    util::{LinesWithEndings, as_24_bit_terminal_escaped},
 };
+use walkdir::WalkDir;
 
 enum CommandHelp {
     Read,
@@ -22,7 +25,11 @@ impl Command {
         let ps = SyntaxSet::load_defaults_newlines();
         let ts = ThemeSet::load_defaults();
 
-        Self { args, syntax_set: ps, theme_set: ts }
+        Self {
+            args,
+            syntax_set: ps,
+            theme_set: ts,
+        }
     }
     fn return_mode(&self) -> Result<CommandHelp, ()> {
         if self.args.len() < 2 {
@@ -54,20 +61,14 @@ impl Command {
             .unwrap()
             .unwrap_or_else(|| self.syntax_set.find_syntax_plain_text());
 
-        let theme = self
-            .theme_set
-            .themes
-            .get("base16-ocean.dark")
-            .unwrap();
+        let theme = self.theme_set.themes.get("base16-ocean.dark").unwrap();
 
         let mut highlighter = HighlightLines::new(syntax, theme);
 
         let mut highlighted = Vec::new();
 
         for line in LinesWithEndings::from(content) {
-            let ranges = highlighter
-                .highlight_line(line, &self.syntax_set)
-                .unwrap();
+            let ranges = highlighter.highlight_line(line, &self.syntax_set).unwrap();
             highlighted.push(as_24_bit_terminal_escaped(&ranges, false));
         }
 
@@ -195,7 +196,7 @@ impl Command {
         };
         match command {
             CommandHelp::Bare => {
-                const HELP: &str = r#"pretty_files 1.2.0 - Bare Mode
+                const HELP: &str = r#"pretty_files 1.3.0 - Bare Mode
 
 USAGE:
     pretty_files bare [OPTIONS] <DIRECTORIES...>
@@ -224,9 +225,9 @@ NOTES:
     • Only directories are accepted as input.
     • With -r, files inside all subdirectories are included."#;
                 println!("{HELP}");
-            },
+            }
             CommandHelp::Common => {
-                const HELP: &str = r#"pretty_files 1.2.0 - Simple File Viewer
+                const HELP: &str = r#"pretty_files 1.3.0 - Simple File Viewer
 
 USAGE:
     pretty_files [COMMAND] [OPTIONS] <PATHS...>
@@ -245,11 +246,9 @@ NOTES:
     • for more information add `--help` after special commands
 "#;
                 println!("{HELP}");
-
-
-            },
+            }
             CommandHelp::Read => {
-                const HELP: &str = r#"pretty_files 1.2.0 - Read Mode
+                const HELP: &str = r#"pretty_files 1.3.0 - Read Mode
 
 USAGE:
     pretty_files [OPTIONS] <FILES...>
@@ -275,7 +274,6 @@ NOTES:
                 println!("{HELP}");
             }
         }
-
     }
     pub fn binary(&self) {
         println!("not implemented yet");

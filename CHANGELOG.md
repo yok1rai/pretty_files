@@ -6,7 +6,13 @@ All notable changes to **pretty_files** are documented in this file.
 
 ---
 
-## [1.2.0] — Improved help menu
+## [1.3.0] — Man page support
+
+### Added
+
+* Added man page support
+
+## [1.3.0] — Improved help menu
 
 ### Added
 
