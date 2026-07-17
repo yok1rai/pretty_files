@@ -11,7 +11,7 @@ pub struct Command {
     theme_set: ThemeSet,
 }
 
-const HELP: &str = r#"pretty_files - Simple file viewer
+const HELP: &str = r#"pretty_files 1.0 - Simple file viewer
 
 USAGE:
     pretty_files [SPECIAL COMMANDS] [OPTIONS] <FILES...>

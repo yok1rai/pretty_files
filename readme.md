@@ -1,4 +1,4 @@
-# Pretty Files version 1.5
+# Pretty Files version 1.0
 
 A simple command-line file viewer for the terminal, written in Rust. It prints file contents with syntax highlighting, optional line numbers, and recursive directory search — a lightweight alternative to `cat` when you want your code to actually look readable.
 
