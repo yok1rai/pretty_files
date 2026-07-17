@@ -113,7 +113,29 @@ impl Command {
         }
 
         for file in &files {
-            let content = fs::read_to_string(file)?;
+            let content = match fs::read_to_string(file) {
+                Ok(content ) => content,
+                Err(e) => {
+                    match e.kind() {
+                        std::io::ErrorKind::IsADirectory => {
+                            eprintln!("`{}` is a directory", file.display());
+                        }
+                        std::io::ErrorKind::NotFound => {
+                            eprintln!("`{}` does not exist", file.display());
+                        }
+                        std::io::ErrorKind::PermissionDenied => {
+                            eprintln!("You don't have permission to access `{}`", file.display());
+                        }
+                        std::io::ErrorKind::InvalidData => {
+                            eprintln!("`{}` is a binary file (try running with `binary` special command)", file.display());
+                        }
+                        _ => {
+                            eprintln!("`{}`: {}", file.display(), e);
+                        }
+                    }
+                    continue;
+                }
+            };
 
             if debug {
                 println!("\n=== {} ===\n", file.display());
@@ -145,9 +167,14 @@ impl Command {
     pub fn bare_read(&self) -> std::io::Result<()> {
         let mut recursive = false;
         let mut directories = Vec::new();
-        if self.args[2].as_str() == "--help" {
-            self.help();
-            return Ok(());
+        match self.args.get(2) {
+            Some(help) => {
+                if help.as_str() == "--help" {
+                    self.help();
+                    return Ok(())
+                }
+            },
+            None => {}
         }
         for arg in &self.args[2..] {
             match arg.as_str() {

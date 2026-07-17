@@ -2,9 +2,23 @@
 
 All notable changes to **pretty_files** are documented in this file.
 
-> **Note:** During development, each milestone corresponded to a single commit. The project was officially released as **v1.0.0**, making it the first public release.
+> **Note:** During development, each milestone corresponded to a single commit. The project was officially released as **v1.4.0**, making it the first public release.
 
 ---
+## [1.4.0] — Better Error Handling
+
+### Added
+
+* Added descriptive error messages for common I/O errors:
+  IsADirectory: displayed when attempting to read a directory.
+  NotFound: displayed when a file or directory does not exist.
+  PermissionDenie: displayed when access to a file or directory is denied.
+  InvalidData — displayed when attempting to read binary or otherwise non-UTF-8 data as text.
+
+### Fixed
+
+* Fixed a panic caused by invoking `pretty_files bare` without any additional arguments.
+
 
 ## [1.3.0] — Man page support
 

@@ -9,12 +9,8 @@ fn main() {
             match arg.trim() {
                 "help" => command.help(),
                 "binary" => command.binary(),
-                "bare" => command.bare_read().unwrap_or_else(|e| {
-                    eprintln!("{e}");
-                }),
-                _ => command.read_file().unwrap_or_else(|e| {
-                    eprintln!("{e}");
-                })
+                "bare" => command.bare_read().unwrap(),
+                _ => command.read_file().unwrap()
             }
         },
         None => {
