@@ -4,6 +4,30 @@ All notable changes to **pretty_files** are documented in this file.
 
 > **Note:** During development, each milestone corresponded to a single commit. The project was officially released as **v1.4.0**, making it the first public release.
 
+## [1.6.0] — Improved Modularity
+
+### Added
+
+* Split command functionality into separate modules for better organization and maintainability.
+* Added dedicated modules for:
+  * Help system
+  * Bare command handling
+  * Utility functions
+* Moved recursive directory searching into the utility module.
+* Prepared the project structure for future features, including binary and hex file viewing.
+
+### Changed
+
+* Refactored the `Command` implementation by removing unrelated functionality from `lib.rs`.
+* Improved code organization by separating CLI features into independent modules.
+* Updated internal function calls to use shared modules instead of methods inside `Command`.
+* Simplified the main command handler by keeping only command dispatch logic.
+
+### Removed
+
+* Removed the old integrated help system from `lib.rs`.
+* Removed duplicated command-related code from the main command implementation.
+
 ## [1.5.0] — Added Ignore Option
 
 ### Added
