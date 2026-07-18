@@ -1,4 +1,4 @@
-const VERSION: &str = "v1.5.0";
+const VERSION: &str = "v1.6.0";
 
 enum CommandHelp {
     Read,
