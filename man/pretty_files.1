@@ -1,7 +1,7 @@
-.TH PRETTY_FILES 1 "July 2026" "pretty_files 1.6.0" "User Commands"
+.TH PRETTY_FILES 1 "July 2026" "pretty_files 2.0.0" "User Commands"
 
 .SH NAME
-pretty_files \- lightweight command-line file viewer with syntax highlighting
+pretty_files \- lightweight command-line file viewer with syntax highlighting and hexadecimal binary viewer
 
 .SH SYNOPSIS
 
@@ -17,22 +17,30 @@ pretty_files \- lightweight command-line file viewer with syntax highlighting
 .br
 
 .B pretty_files
+.B binary
+.RI [ OPTIONS ] " " <FILES...>
+
+.br
+
+.B pretty_files
 .B help
 
 .br
 
 .B pretty_files
-.B binary
+.B version
 
 .SH DESCRIPTION
 
 .B pretty_files
-is a lightweight command-line file viewer written in Rust. It displays
-text files with syntax highlighting, optional line numbers, recursive
-directory traversal, and file filtering.
+is a lightweight command-line file viewer written in Rust. It supports
+syntax-highlighted text viewing, hexadecimal binary viewing, recursive
+directory traversal, optional line numbers, file filtering, and automatic
+file headers when displaying multiple files.
 
-Syntax highlighting is automatically selected based on the file type.
-Files with unsupported or unknown extensions are displayed as plain text.
+Syntax highlighting is automatically selected based on the detected file
+type. Files with unsupported or unknown extensions are displayed as plain
+text.
 
 .SH COMMANDS
 
@@ -47,11 +55,17 @@ Useful for piping file lists into other commands.
 
 .TP
 .B binary
-Reserved for future binary file support.
+Display binary files as hexadecimal dumps with an ASCII preview.
+
+.TP
+.B version
+Display the installed version of
+.BR pretty_files .
 
 .SH READ MODE
 
-Read mode is the default mode and displays the contents of one or more files.
+Read mode is the default mode and displays the contents of one or more text
+files.
 
 .SS Options
 
@@ -71,7 +85,8 @@ Print the file name before displaying its contents.
 .B \-D
 Disable automatic debug mode.
 
-Automatic debug mode is enabled when multiple files are displayed.
+Automatic debug mode is enabled automatically when multiple files are
+displayed.
 
 .TP
 .B \-S
@@ -79,7 +94,8 @@ Disable syntax highlighting.
 
 .TP
 .BR \-i ", " \-\-ignore " " <PATH>
-Ignore a file or path. This option may be specified multiple times.
+Ignore a file or path.
+This option may be specified multiple times.
 
 .SS Examples
 
@@ -104,7 +120,7 @@ Disable syntax highlighting:
 .B pretty_files -S file.txt
 
 .TP
-Ignore a file while searching recursively:
+Ignore a file:
 .B pretty_files -r -i src/lib.rs src/
 
 .TP
@@ -115,7 +131,7 @@ Ignore multiple files:
 
 The
 .B bare
-command prints file paths without reading or displaying file contents.
+command prints file paths without displaying file contents.
 
 .SS Synopsis
 
@@ -130,7 +146,7 @@ Recursively list files inside directories.
 
 .TP
 .BR \-i ", " \-\-ignore " " <PATH>
-Ignore a file or path while listing files.
+Ignore a file or path.
 This option may be specified multiple times.
 
 .SS Examples
@@ -163,7 +179,57 @@ done
 
 The
 .B binary
-command is reserved for future binary file support.
+command displays binary files as hexadecimal dumps with a printable ASCII
+preview.
+
+.SS Synopsis
+
+.B pretty_files binary
+.RI [ OPTIONS ] " " <FILES...>
+
+.SS Options
+
+.TP
+.BR \-r ", " \-\-recursive
+Recursively search directories for files.
+
+.TP
+.BR \-d ", " \-\-debug
+Print the file name before displaying its contents.
+
+.TP
+.B \-D
+Disable automatic debug mode.
+
+Automatic debug mode is enabled automatically when multiple files are
+displayed.
+
+.TP
+.BR \-i ", " \-\-ignore " " <PATH>
+Ignore a file or path.
+This option may be specified multiple times.
+
+.SS Examples
+
+.TP
+Display a binary file:
+.B pretty_files binary image.png
+
+.TP
+Display an executable:
+.B pretty_files binary /bin/ls
+
+.TP
+Recursively display binary files:
+.B pretty_files binary -r build/
+
+.TP
+Ignore a file:
+.B pretty_files binary -r -i build/cache.bin build/
+
+.TP
+Ignore multiple files:
+.B pretty_files binary -r -i cache.bin -i test.bin build/
 
 .SH NOTES
 
@@ -179,7 +245,12 @@ The
 option expects directories as input.
 
 .TP
-Files with unknown or unsupported extensions are displayed as plain text.
+Text files with unknown or unsupported extensions are displayed as plain
+text.
+
+.TP
+Binary mode displays data as hexadecimal values alongside printable ASCII
+characters.
 
 .SH DEPENDENCIES
 

@@ -144,7 +144,7 @@ impl Command {
                 continue;
             }
             if debug {
-                println!("\n=== {} ===\n", file.display());
+                println!("\n{}:\n", file.display());
             }
             if syntax_highlight {
                 let highlighted =

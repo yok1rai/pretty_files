@@ -1,8 +1,9 @@
-const VERSION: &str = "v1.6.0";
+const VERSION: &str = "v2.0.0";
 
 enum CommandHelp {
     Read,
     Bare,
+    Binary,
     Common,
 }
 
@@ -14,6 +15,7 @@ fn return_mode(args: &[String]) -> CommandHelp {
     match args[1].as_str() {
         "bare" => CommandHelp::Bare,
         "help" => CommandHelp::Common,
+        "binary" => CommandHelp::Binary,
         _ => CommandHelp::Read,
     }
 }
@@ -102,6 +104,35 @@ NOTES:
     • Automatic debug mode is enabled when reading multiple files.
     • The -r option expects directories as input.
     • Files discovered recursively are treated like normal input files.", VERSION);
+                println!("{help}");
+            },
+            CommandHelp::Binary => {
+                let help: String = format!(r#"pretty_files {} - Binary Mode
+
+USAGE:
+pretty_files binary [OPTIONS] <FILES...>
+
+DESCRIPTION:
+Displays binary files as hexadecimal with an ASCII preview.
+
+OPTIONS:
+-r, --recursive     Search directories recursively
+-d, --debug         Print file names before their contents
+-D                  Disable automatic debug mode
+-i, --ignore        Ignore the following file
+
+EXAMPLES:
+pretty_files binary image.png
+pretty_files binary executable
+pretty_files binary firmware.bin
+pretty_files binary -r build/
+pretty_files binary -r build/ -i build/cache.bin
+
+NOTES:
+• Automatic debug mode is enabled when reading multiple files.
+• Output is displayed as a hexadecimal dump.
+• The -r option expects directories as input."#, VERSION);
+
                 println!("{help}");
             }
         }

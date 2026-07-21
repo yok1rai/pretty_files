@@ -10,7 +10,7 @@ fn main() {
         Some(arg) => {
             match arg.trim() {
                 "help" => help::help(command.args()),
-                "binary" => command.binary(),
+                "binary" => command.read_binary().unwrap(),
                 "bare" => command.bare_read().unwrap(),
                 "version" => help::version(),
                 _ => command.read_file().unwrap(),

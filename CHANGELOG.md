@@ -4,6 +4,16 @@ All notable changes to **pretty_files** are documented in this file.
 
 > **Note:** During development, each milestone corresponded to a single commit. The project was officially released as **v1.4.0**, making it the first public release.
 
+## [2.0.0] — Binary Mode Added
+
+### Added
+
+* binary mode
+
+### Changed
+
+* file headers is now "file_name:" not "=== file_name ==="
+
 ## [1.6.0] — Improved Modularity
 
 ### Added
