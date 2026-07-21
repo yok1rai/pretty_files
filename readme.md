@@ -1,17 +1,23 @@
-# Pretty Files v2.0.0
+# Pretty Files v2.5.0
 
-**Pretty Files** is a lightweight command-line file viewer written in Rust. It provides syntax-highlighted text viewing, hexadecimal binary viewing, recursive directory traversal, optional line numbers, and automatic file headers, making it a convenient alternative to tools like `cat` and `hexdump` for everyday file inspection.
+**Pretty Files** is a lightweight command-line file viewer written in Rust. It provides syntax-highlighted text viewing, automatic binary inspection, recursive file searching, file path listing, and optional debugging features.
+
+Unlike traditional tools where you need to manually choose between text and binary modes, Pretty Files automatically detects file types and selects the appropriate viewer. Text files are displayed with syntax highlighting, while binary files are displayed as hexadecimal dumps with an ASCII preview.
+
+It is designed as a simple alternative to tools like `cat`, `less`, and `hexdump` for quickly inspecting files directly from the terminal.
 
 ## Features
 
-- Syntax highlighting with automatic language detection
-- Hexadecimal binary viewer with ASCII preview
-- Recursive directory traversal
-- Optional line numbers
-- Automatic file headers when viewing multiple files
-- File path listing through the `bare` command
-- File filtering with `--ignore`
-- Zero configuration — point it at a file and start reading
+* Automatic text and binary file detection
+* Syntax highlighting with automatic language detection
+* Hexadecimal binary inspection with ASCII preview
+* Recursive directory traversal
+* Optional line numbers
+* Automatic file headers when viewing multiple files
+* Bare mode for printing file paths
+* File filtering with `--ignore`
+* Multiple file support
+* Zero configuration — open files and start reading
 
 ## Installation
 
@@ -39,7 +45,7 @@ The compiled binary will be available at:
 target/release/pretty_files
 ```
 
-Or install it directly with Cargo:
+You can also install it with Cargo:
 
 ```bash
 cargo install --path .
@@ -53,108 +59,156 @@ pretty_files [COMMAND] [OPTIONS] <PATHS...>
 
 ## Commands
 
-| Command | Description |
-|--------|-------------|
-| `help` | Display the help menu. |
-| `bare` | Print file paths without displaying file contents. |
-| `binary` | Display binary files as hexadecimal dumps with an ASCII preview. |
-| `version` | Display the installed version. |
+| Command   | Description                                |
+| --------- | ------------------------------------------ |
+| `help`    | Display help information.                  |
+| `bare`    | Print file paths instead of file contents. |
+| `version` | Display the current version.               |
 
-## Read Mode Options
+## Automatic File Detection
 
-| Flag | Description |
-|------|-------------|
-| `-n`, `--numbers` | Display line numbers. |
-| `-r`, `--recursive` | Search directories recursively. |
-| `-d`, `--debug` | Print file names before displaying their contents. |
-| `-D` | Disable automatic debug mode. |
-| `-S` | Disable syntax highlighting. |
-| `-i`, `--ignore` | Ignore a file or path. May be specified multiple times. |
+Pretty Files automatically detects the type of each file.
 
-## Binary Mode Options
+Text files:
 
-| Flag | Description |
-|------|-------------|
-| `-r`, `--recursive` | Search directories recursively. |
-| `-d`, `--debug` | Print file names before displaying their contents. |
-| `-D` | Disable automatic debug mode. |
-| `-i`, `--ignore` | Ignore a file or path. May be specified multiple times. |
+* Are displayed normally.
+* Receive syntax highlighting when supported.
+* Can optionally include line numbers.
+
+Binary files:
+
+* Are displayed as hexadecimal dumps.
+* Include printable ASCII previews.
+* Do not require a separate command.
+
+Examples:
+
+```bash
+# Display a text file
+pretty_files main.rs
+
+# Display a binary file
+pretty_files image.png
+
+# Display mixed file types together
+pretty_files main.rs image.png /bin/ls
+```
+
+## Text Display Options
+
+| Flag                | Description                                        |
+| ------------------- | -------------------------------------------------- |
+| `-n`, `--numbers`   | Display line numbers.                              |
+| `-r`, `--recursive` | Search directories recursively.                    |
+| `-d`, `--debug`     | Display file names before contents.                |
+| `-D`                | Disable automatic debug mode.                      |
+| `-S`                | Disable syntax highlighting.                       |
+| `-i`, `--ignore`    | Ignore a file or path. Can be used multiple times. |
 
 ## Bare Mode Options
 
-| Flag | Description |
-|------|-------------|
-| `-r`, `--recursive` | Search directories recursively. |
-| `-i`, `--ignore` | Ignore a file or path. May be specified multiple times. |
+| Flag                | Description                                        |
+| ------------------- | -------------------------------------------------- |
+| `-r`, `--recursive` | Search directories recursively.                    |
+| `-i`, `--ignore`    | Ignore a file or path. Can be used multiple times. |
 
 ## Examples
 
-### Read text files
+### Read files
+
+Display a file:
 
 ```bash
-# Display a file
 pretty_files main.rs
+```
 
-# Display multiple files
+Display multiple files:
+
+```bash
 pretty_files main.rs Cargo.toml
+```
 
-# Display line numbers
+Display line numbers:
+
+```bash
 pretty_files -n src/main.rs
+```
 
-# Display every file recursively
+Search recursively:
+
+```bash
 pretty_files -r src/
+```
 
-# Disable syntax highlighting
+Disable syntax highlighting:
+
+```bash
 pretty_files -S README.md
 ```
 
-### View binary files
+Display mixed text and binary files:
 
 ```bash
-# Display a binary file
-pretty_files binary image.png
-
-# Display an executable
-pretty_files binary /bin/ls
-
-# Search recursively
-pretty_files binary -r build/
-
-# Ignore a file
-pretty_files binary -r -i build/cache.bin build/
+pretty_files src/main.rs image.png /bin/ls
 ```
+
+Ignore files:
+
+```bash
+pretty_files -r -i src/lib.rs src/
+```
+
+---
 
 ### List file paths
 
+Display files inside a directory:
+
 ```bash
-# List files
 pretty_files bare src/
+```
 
-# List files recursively
+Search recursively:
+
+```bash
 pretty_files bare -r src/
+```
 
-# Ignore a file
+Ignore files:
+
+```bash
 pretty_files bare -r -i src/lib.rs src/
 ```
 
 ## Notes
 
-- Automatic debug mode is enabled when displaying multiple files.
-- Use `-D` to disable automatic debug mode.
-- Syntax highlighting is selected automatically based on the detected file type.
-- Files with unsupported or unknown extensions are displayed as plain text.
-- Binary mode displays hexadecimal values alongside printable ASCII characters.
-- The `-r` option expects directories as input.
+* Multiple files automatically enable debug headers.
+* Use `-D` to disable automatic debug mode.
+* File type detection is performed automatically.
+* Syntax highlighting is selected based on the detected file type.
+* Unknown extensions are displayed as plain text.
+* Binary files are displayed as hexadecimal values with printable ASCII output.
+* Bare mode only prints file paths and does not display file contents.
+* Recursive mode expects directories as input.
 
 ## Dependencies
 
-- **syntect** — Syntax highlighting and language detection.
-- **walkdir** — Recursive directory traversal.
+* **syntect** — Syntax highlighting and language detection.
+* **walkdir** — Recursive directory traversal.
+* **content_inspector** — Binary file detection.
 
 ## Contributing
 
-Contributions are welcome. If you add or modify commands or options, please keep the README, man page, and built-in help messages synchronized.
+Contributions are welcome.
+
+If adding new commands, options, or behavior changes, keep the following synchronized:
+
+* README
+* Built-in help messages
+* Man page
 
 ## License
 
-This project is licensed under the GNU General Public License v3.0. See the `LICENSE` file for details.
+This project is licensed under the GNU General Public License v3.0.
+
+See the [LICENSE](./LICENSE) file for details.

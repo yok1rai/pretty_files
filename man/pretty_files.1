@@ -1,7 +1,7 @@
-.TH PRETTY_FILES 1 "July 2026" "pretty_files 2.0.0" "User Commands"
+.TH PRETTY_FILES 1 "July 2026" "pretty_files 2.5.0" "User Commands"
 
 .SH NAME
-pretty_files \- lightweight command-line file viewer with syntax highlighting and hexadecimal binary viewer
+pretty_files \- lightweight command-line file viewer with syntax highlighting and automatic binary detection
 
 .SH SYNOPSIS
 
@@ -17,13 +17,8 @@ pretty_files \- lightweight command-line file viewer with syntax highlighting an
 .br
 
 .B pretty_files
-.B binary
-.RI [ OPTIONS ] " " <FILES...>
-
-.br
-
-.B pretty_files
 .B help
+.RI [ TOPIC ]
 
 .br
 
@@ -33,39 +28,46 @@ pretty_files \- lightweight command-line file viewer with syntax highlighting an
 .SH DESCRIPTION
 
 .B pretty_files
-is a lightweight command-line file viewer written in Rust. It supports
-syntax-highlighted text viewing, hexadecimal binary viewing, recursive
-directory traversal, optional line numbers, file filtering, and automatic
-file headers when displaying multiple files.
+is a lightweight command-line file viewer written in Rust.
 
-Syntax highlighting is automatically selected based on the detected file
-type. Files with unsupported or unknown extensions are displayed as plain
-text.
+It provides syntax-highlighted text viewing, automatic binary file
+inspection, recursive directory traversal, file path listing, optional
+line numbers, file filtering, and automatic file headers when displaying
+multiple files.
+
+Text files are displayed with syntax highlighting when possible.
+Unknown or unsupported file types are displayed as plain text.
+
+Binary files are automatically detected and displayed as hexadecimal
+dumps with a printable ASCII preview.
 
 .SH COMMANDS
 
 .TP
-.B help
-Display the help menu.
+.B help [TOPIC]
+Display help information.
+
+Available topics:
+
+.B text
+and
+.B bare .
 
 .TP
 .B bare
-Print file paths without displaying their contents.
+Print file paths without displaying file contents.
 Useful for piping file lists into other commands.
-
-.TP
-.B binary
-Display binary files as hexadecimal dumps with an ASCII preview.
 
 .TP
 .B version
 Display the installed version of
 .BR pretty_files .
 
-.SH READ MODE
+.SH TEXT MODE
 
-Read mode is the default mode and displays the contents of one or more text
-files.
+Text mode is the default mode and displays the contents of files.
+
+Binary files are automatically detected and handled separately.
 
 .SS Options
 
@@ -79,14 +81,13 @@ Recursively search directories for files.
 
 .TP
 .BR \-d ", " \-\-debug
-Print the file name before displaying its contents.
+Display file names before displaying their contents.
 
 .TP
 .B \-D
 Disable automatic debug mode.
 
-Automatic debug mode is enabled automatically when multiple files are
-displayed.
+Automatic debug mode is enabled when displaying multiple files.
 
 .TP
 .B \-S
@@ -112,26 +113,24 @@ Display line numbers:
 .B pretty_files -n src/main.rs
 
 .TP
-Display all files recursively:
+Search recursively:
 .B pretty_files -r src/
 
 .TP
 Disable syntax highlighting:
-.B pretty_files -S file.txt
+.B pretty_files -S README.md
 
 .TP
 Ignore a file:
 .B pretty_files -r -i src/lib.rs src/
-
-.TP
-Ignore multiple files:
-.B pretty_files -r -i src/lib.rs -i src/main.rs src/
 
 .SH BARE MODE
 
 The
 .B bare
 command prints file paths without displaying file contents.
+
+It is useful for scripting, shell pipelines, and quickly listing files.
 
 .SS Synopsis
 
@@ -142,7 +141,7 @@ command prints file paths without displaying file contents.
 
 .TP
 .BR \-r ", " \-\-recursive
-Recursively list files inside directories.
+Recursively search directories.
 
 .TP
 .BR \-i ", " \-\-ignore " " <PATH>
@@ -152,7 +151,7 @@ This option may be specified multiple times.
 .SS Examples
 
 .TP
-List files in a directory:
+List files inside a directory:
 .B pretty_files bare src/
 
 .TP
@@ -164,72 +163,26 @@ Ignore a file:
 .B pretty_files bare -r -i src/lib.rs src/
 
 .TP
-Ignore multiple files:
-.B pretty_files bare -r -i src/lib.rs -i src/main.rs src/
-
-.TP
-Use the output in a shell loop:
+Use output in a shell loop:
 .nf
 for file in $(pretty_files bare -r src/); do
     cat "$file"
 done
 .fi
 
-.SH BINARY MODE
-
-The
-.B binary
-command displays binary files as hexadecimal dumps with a printable ASCII
-preview.
-
-.SS Synopsis
-
-.B pretty_files binary
-.RI [ OPTIONS ] " " <FILES...>
-
-.SS Options
+.SH HELP TOPICS
 
 .TP
-.BR \-r ", " \-\-recursive
-Recursively search directories for files.
+.B pretty_files help
+Display general help.
 
 .TP
-.BR \-d ", " \-\-debug
-Print the file name before displaying its contents.
+.B pretty_files help text
+Display text mode options.
 
 .TP
-.B \-D
-Disable automatic debug mode.
-
-Automatic debug mode is enabled automatically when multiple files are
-displayed.
-
-.TP
-.BR \-i ", " \-\-ignore " " <PATH>
-Ignore a file or path.
-This option may be specified multiple times.
-
-.SS Examples
-
-.TP
-Display a binary file:
-.B pretty_files binary image.png
-
-.TP
-Display an executable:
-.B pretty_files binary /bin/ls
-
-.TP
-Recursively display binary files:
-.B pretty_files binary -r build/
-
-.TP
-Ignore a file:
-.B pretty_files binary -r -i build/cache.bin build/
-
-.TP
-Ignore multiple files:
-.B pretty_files binary -r -i cache.bin -i test.bin build/
+.B pretty_files help bare
+Display bare mode options.
 
 .SH NOTES
 
@@ -245,12 +198,11 @@ The
 option expects directories as input.
 
 .TP
-Text files with unknown or unsupported extensions are displayed as plain
-text.
+Bare mode only outputs file paths and does not display file contents.
 
 .TP
-Binary mode displays data as hexadecimal values alongside printable ASCII
-characters.
+Binary files are detected automatically and displayed as hexadecimal data
+with an ASCII preview.
 
 .SH DEPENDENCIES
 
@@ -261,6 +213,10 @@ Provides syntax highlighting and language detection.
 .TP
 .B walkdir
 Provides recursive directory traversal.
+
+.TP
+.B content_inspector
+Provides binary file detection.
 
 .SH AUTHOR
 
