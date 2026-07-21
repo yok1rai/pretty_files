@@ -4,6 +4,45 @@ All notable changes to **pretty_files** are documented in this file.
 
 > **Note:** During development, each milestone corresponded to a single commit. The project was officially released as **v1.4.0**, making it the first public release.
 
+## [2.5.0] — Automatic File Detection and Unified Reader
+
+### Added
+
+* Added automatic file type detection using `content_inspector`.
+* Added unified file reading through the default reader instead of requiring separate text and binary modes.
+* Added support for displaying text and binary files together in a single command.
+* Added help topics for specific sections:
+  * `pretty_files help text`
+  * `pretty_files help bare`
+* Added centralized command argument parsing and state handling.
+* Added automatic binary file inspection with hexadecimal output and ASCII previews.
+
+### Changed
+
+* Removed the need to manually select binary mode when reading files.
+* Reworked the file reading pipeline:
+  * Files are now inspected automatically.
+  * Text files are displayed with syntax highlighting when supported.
+  * Binary files are displayed as hexadecimal dumps.
+* Replaced the old separate binary command workflow with automatic detection.
+* Refactored command handling into a single `read()` execution flow.
+* Improved error handling by centralizing I/O error reporting.
+* Simplified text and binary readers by making them responsible only for displaying already-selected file types.
+* Updated the help system to use topic-based documentation.
+* Updated the man page and documentation to reflect the new automatic detection system.
+
+### Removed
+
+* Removed the requirement to use the `binary` command for binary files.
+* Removed the old binary command workflow.
+* Removed duplicated argument parsing logic from individual modes.
+
+### Dependencies
+
+* Added `content_inspector` for detecting binary files.
+
+---
+
 ## [2.0.0] — Binary Mode Added
 
 ### Added
@@ -13,6 +52,8 @@ All notable changes to **pretty_files** are documented in this file.
 ### Changed
 
 * file headers is now "file_name:" not "=== file_name ==="
+
+---
 
 ## [1.6.0] — Improved Modularity
 
@@ -38,6 +79,8 @@ All notable changes to **pretty_files** are documented in this file.
 * Removed the old integrated help system from `lib.rs`.
 * Removed duplicated command-related code from the main command implementation.
 
+---
+
 ## [1.5.0] — Added Ignore Option
 
 ### Added
@@ -60,6 +103,7 @@ All notable changes to **pretty_files** are documented in this file.
 
 * Fixed a panic caused by invoking `pretty_files bare` without any additional arguments.
 
+---
 
 ## [1.3.0] — Man page support
 
@@ -83,12 +127,16 @@ All notable changes to **pretty_files** are documented in this file.
 * Improved help output by showing only relevant options and examples for the selected command.
 * Updated command documentation to match the current CLI structure.
 
+---
+
 ## [1.1.0] — Bare Command Feature
 
 ### Added
 
 - Added the `bare` special command to list file paths inside one or more directories.
 - Added support for recursive directory traversal using the `-r` / `--recursive` option.
+
+---
 
 ## [1.0.0] — First public release
 
