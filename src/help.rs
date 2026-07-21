@@ -20,7 +20,7 @@ impl Command {
         println!(r#"pretty_files {VERSION} - Simple File Viewer
 
 USAGE:
-    pretty_files <COMMAND> [OPTIONS] <PATHS...>
+    pf <COMMAND> [OPTIONS] <PATHS...>
 
 COMMANDS:
     help [TOPIC]       Show help
@@ -34,17 +34,17 @@ HELP TOPICS:
     binary
 
 EXAMPLES:
-    pretty_files help
-    pretty_files help text
-    pretty_files help binary
+    pf help
+    pf help text
+    pf help binary
 "#);
     }
 
     fn text_help(&self) {
-        println!(r#"pretty_files {VERSION} - Text Mode
+        println!(r#"pf {VERSION} - Text Mode
 
 USAGE:
-    pretty_files [OPTIONS] <FILES...>
+    pf [OPTIONS] <FILES...>
 
 OPTIONS:
     -n, --numbers       Display line numbers
@@ -60,7 +60,7 @@ OPTIONS:
         println!(r#"pretty_files {VERSION} - Bare Mode
 
 USAGE:
-    pretty_files bare [OPTIONS] <DIRECTORIES...>
+    pf bare [OPTIONS] <DIRECTORIES...>
 
 OPTIONS:
     -r, --recursive     Search recursively
@@ -72,7 +72,7 @@ OPTIONS:
         println!(r#"pretty_files {VERSION} - Binary Mode
 
 USAGE:
-    pretty_files binary [OPTIONS] <FILES...>
+    pf binary [OPTIONS] <FILES...>
 
 OPTIONS:
     -r, --recursive     Search recursively

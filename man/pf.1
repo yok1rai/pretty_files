@@ -1,33 +1,33 @@
-.TH PRETTY_FILES 1 "July 2026" "pretty_files 2.5.0" "User Commands"
+.TH PF 1 "July 2026" "pf 2.5.0" "User Commands"
 
 .SH NAME
-pretty_files \- lightweight command-line file viewer with syntax highlighting and automatic binary detection
+pf \- lightweight command-line file viewer with syntax highlighting and automatic binary detection
 
 .SH SYNOPSIS
 
-.B pretty_files
+.B pf
 .RI [ OPTIONS ] " " <PATHS...>
 
 .br
 
-.B pretty_files
+.B pf
 .B bare
 .RI [ OPTIONS ] " " <DIRECTORIES...>
 
 .br
 
-.B pretty_files
+.B pf
 .B help
 .RI [ TOPIC ]
 
 .br
 
-.B pretty_files
+.B pf
 .B version
 
 .SH DESCRIPTION
 
-.B pretty_files
+.B pf
 is a lightweight command-line file viewer written in Rust.
 
 It provides syntax-highlighted text viewing, automatic binary file
@@ -61,7 +61,7 @@ Useful for piping file lists into other commands.
 .TP
 .B version
 Display the installed version of
-.BR pretty_files .
+.BR pf .
 
 .SH TEXT MODE
 
@@ -102,27 +102,27 @@ This option may be specified multiple times.
 
 .TP
 Display a file:
-.B pretty_files main.rs
+.B pf main.rs
 
 .TP
 Display multiple files:
-.B pretty_files main.rs Cargo.toml
+.B pf main.rs Cargo.toml
 
 .TP
 Display line numbers:
-.B pretty_files -n src/main.rs
+.B pf -n src/main.rs
 
 .TP
 Search recursively:
-.B pretty_files -r src/
+.B pf -r src/
 
 .TP
 Disable syntax highlighting:
-.B pretty_files -S README.md
+.B pf -S README.md
 
 .TP
 Ignore a file:
-.B pretty_files -r -i src/lib.rs src/
+.B pf -r -i src/lib.rs src/
 
 .SH BARE MODE
 
@@ -134,7 +134,7 @@ It is useful for scripting, shell pipelines, and quickly listing files.
 
 .SS Synopsis
 
-.B pretty_files bare
+.B pf bare
 .RI [ OPTIONS ] " " <DIRECTORIES...>
 
 .SS Options
@@ -152,20 +152,20 @@ This option may be specified multiple times.
 
 .TP
 List files inside a directory:
-.B pretty_files bare src/
+.B pf bare src/
 
 .TP
 List files recursively:
-.B pretty_files bare -r src/
+.B pf bare -r src/
 
 .TP
 Ignore a file:
-.B pretty_files bare -r -i src/lib.rs src/
+.B pf bare -r -i src/lib.rs src/
 
 .TP
 Use output in a shell loop:
 .nf
-for file in $(pretty_files bare -r src/); do
+for file in $(pf bare -r src/); do
     cat "$file"
 done
 .fi
@@ -173,15 +173,15 @@ done
 .SH HELP TOPICS
 
 .TP
-.B pretty_files help
+.B pf help
 Display general help.
 
 .TP
-.B pretty_files help text
+.B pf help text
 Display text mode options.
 
 .TP
-.B pretty_files help bare
+.B pf help bare
 Display bare mode options.
 
 .SH NOTES

@@ -85,13 +85,13 @@ Examples:
 
 ```bash
 # Display a text file
-pretty_files main.rs
+pf main.rs
 
 # Display a binary file
-pretty_files image.png
+pf image.png
 
 # Display mixed file types together
-pretty_files main.rs image.png /bin/ls
+pf main.rs image.png /bin/ls
 ```
 
 ## Text Display Options
@@ -119,43 +119,43 @@ pretty_files main.rs image.png /bin/ls
 Display a file:
 
 ```bash
-pretty_files main.rs
+pf main.rs
 ```
 
 Display multiple files:
 
 ```bash
-pretty_files main.rs Cargo.toml
+pf main.rs Cargo.toml
 ```
 
 Display line numbers:
 
 ```bash
-pretty_files -n src/main.rs
+pf -n src/main.rs
 ```
 
 Search recursively:
 
 ```bash
-pretty_files -r src/
+pf -r src/
 ```
 
 Disable syntax highlighting:
 
 ```bash
-pretty_files -S README.md
+pf -S README.md
 ```
 
 Display mixed text and binary files:
 
 ```bash
-pretty_files src/main.rs image.png /bin/ls
+pf src/main.rs image.png /bin/ls
 ```
 
 Ignore files:
 
 ```bash
-pretty_files -r -i src/lib.rs src/
+pf -r -i src/lib.rs src/
 ```
 
 ---
@@ -165,19 +165,19 @@ pretty_files -r -i src/lib.rs src/
 Display files inside a directory:
 
 ```bash
-pretty_files bare src/
+pf bare src/
 ```
 
 Search recursively:
 
 ```bash
-pretty_files bare -r src/
+pf bare -r src/
 ```
 
 Ignore files:
 
 ```bash
-pretty_files bare -r -i src/lib.rs src/
+pf bare -r -i src/lib.rs src/
 ```
 
 ## Notes
