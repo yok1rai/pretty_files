@@ -1,15 +1,17 @@
-# Pretty Files v1.6
+# Pretty Files v2.0.0
 
-**Pretty Files** is a lightweight command-line file viewer written in Rust. It displays files with syntax highlighting, optional line numbers, and recursive directory support, providing a simple and convenient alternative to tools like `cat` for viewing source code.
+**Pretty Files** is a lightweight command-line file viewer written in Rust. It provides syntax-highlighted text viewing, hexadecimal binary viewing, recursive directory traversal, optional line numbers, and automatic file headers, making it a convenient alternative to tools like `cat` and `hexdump` for everyday file inspection.
 
 ## Features
 
-* Syntax highlighting with automatic language detection
-* Recursive directory traversal
-* Optional line numbers
-* Automatic debug headers when viewing multiple files
-* File path listing through the `bare` command
-* Zero configuration — point it at a file and start reading
+- Syntax highlighting with automatic language detection
+- Hexadecimal binary viewer with ASCII preview
+- Recursive directory traversal
+- Optional line numbers
+- Automatic file headers when viewing multiple files
+- File path listing through the `bare` command
+- File filtering with `--ignore`
+- Zero configuration — point it at a file and start reading
 
 ## Installation
 
@@ -23,7 +25,7 @@ cd pretty_files
 makepkg -si
 ```
 
-### From source
+### From Source
 
 ```bash
 git clone https://github.com/yok1rai/pretty_files.git
@@ -37,7 +39,7 @@ The compiled binary will be available at:
 target/release/pretty_files
 ```
 
-You can also install it directly with Cargo:
+Or install it directly with Cargo:
 
 ```bash
 cargo install --path .
@@ -51,68 +53,107 @@ pretty_files [COMMAND] [OPTIONS] <PATHS...>
 
 ## Commands
 
-| Command  | Description                                                                     |
-| -------- | ------------------------------------------------------------------------------- |
-| `help`   | Display the general help menu.                                                  |
-| `bare`   | Print file paths from one or more directories without displaying file contents. |
-| `binary` | Read binary files *(currently not implemented).*                                |
-| `version`| Print the version number
+| Command | Description |
+|--------|-------------|
+| `help` | Display the help menu. |
+| `bare` | Print file paths without displaying file contents. |
+| `binary` | Display binary files as hexadecimal dumps with an ASCII preview. |
+| `version` | Display the installed version. |
 
-## Options
+## Read Mode Options
 
-| Flag                | Description                             |
-| ------------------- | --------------------------------------- |
-| `-n`, `--numbers`   | Display line numbers.                   |
-| `-r`, `--recursive` | Search directories recursively.         |
-| `-d`, `--debug`     | Display filenames before file contents. |
-| `-D`                | Disable automatic debug mode.           |
-| `-S`                | Disable syntax highlighting.            |
-| `-i`  `--ignore`    | Ignore the following file.              |
+| Flag | Description |
+|------|-------------|
+| `-n`, `--numbers` | Display line numbers. |
+| `-r`, `--recursive` | Search directories recursively. |
+| `-d`, `--debug` | Print file names before displaying their contents. |
+| `-D` | Disable automatic debug mode. |
+| `-S` | Disable syntax highlighting. |
+| `-i`, `--ignore` | Ignore a file or path. May be specified multiple times. |
+
+## Binary Mode Options
+
+| Flag | Description |
+|------|-------------|
+| `-r`, `--recursive` | Search directories recursively. |
+| `-d`, `--debug` | Print file names before displaying their contents. |
+| `-D` | Disable automatic debug mode. |
+| `-i`, `--ignore` | Ignore a file or path. May be specified multiple times. |
+
+## Bare Mode Options
+
+| Flag | Description |
+|------|-------------|
+| `-r`, `--recursive` | Search directories recursively. |
+| `-i`, `--ignore` | Ignore a file or path. May be specified multiple times. |
 
 ## Examples
 
+### Read text files
+
 ```bash
-# Display a single file
-pretty_files file.txt
+# Display a file
+pretty_files main.rs
 
 # Display multiple files
-pretty_files file1.txt file2.txt
+pretty_files main.rs Cargo.toml
 
-# Display a file with line numbers
-pretty_files -n file.txt
+# Display line numbers
+pretty_files -n src/main.rs
 
-# Recursively display files inside a directory
-pretty_files -r ./src
+# Display every file recursively
+pretty_files -r src/
 
-# Recursive reading with line numbers
-pretty_files -r -n ./src
+# Disable syntax highlighting
+pretty_files -S README.md
+```
 
-# Display the help menu
-pretty_files help
+### View binary files
 
-# List files inside a directory
-pretty_files bare src
+```bash
+# Display a binary file
+pretty_files binary image.png
 
-# Recursively list files
-pretty_files bare -r src
+# Display an executable
+pretty_files binary /bin/ls
+
+# Search recursively
+pretty_files binary -r build/
+
+# Ignore a file
+pretty_files binary -r -i build/cache.bin build/
+```
+
+### List file paths
+
+```bash
+# List files
+pretty_files bare src/
+
+# List files recursively
+pretty_files bare -r src/
+
+# Ignore a file
+pretty_files bare -r -i src/lib.rs src/
 ```
 
 ## Notes
 
-* When multiple files are displayed, debug mode is enabled automatically to separate each file's output with a filename header.
-* Use `-D` to disable automatic debug headers.
-* Syntax highlighting is detected automatically using each file's extension.
-* Files with unsupported or unknown extensions are displayed as plain text.
-* The `-r` option expects directories and searches all files inside them recursively.
+- Automatic debug mode is enabled when displaying multiple files.
+- Use `-D` to disable automatic debug mode.
+- Syntax highlighting is selected automatically based on the detected file type.
+- Files with unsupported or unknown extensions are displayed as plain text.
+- Binary mode displays hexadecimal values alongside printable ASCII characters.
+- The `-r` option expects directories as input.
 
 ## Dependencies
 
-* **syntect** — Provides syntax highlighting and language detection.
-* **walkdir** — Provides recursive directory traversal.
+- **syntect** — Syntax highlighting and language detection.
+- **walkdir** — Recursive directory traversal.
 
 ## Contributing
 
-Contributions are welcome! If you add or modify commands or options, please keep the built-in help messages in `src/lib.rs` synchronized with this documentation.
+Contributions are welcome. If you add or modify commands or options, please keep the README, man page, and built-in help messages synchronized.
 
 ## License
 
