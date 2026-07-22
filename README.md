@@ -21,9 +21,23 @@ It is designed as a simple alternative to tools like `cat`, `less`, and `hexdump
 
 ## Installation
 
-### Arch Linux (AUR)
+### From [crates.io](https://crates.io/crates/pretty_files)
 
-A `PKGBUILD` is included in the repository.
+Install **Pretty Files** using Cargo:
+
+```bash
+cargo install pretty_files
+```
+
+This installs the `pf` command:
+
+```bash
+pf file.txt
+```
+
+### Arch Linux
+
+A `PKGBUILD` is included in the repository:
 
 ```bash
 git clone https://github.com/yok1rai/pretty_files.git
@@ -31,7 +45,55 @@ cd pretty_files
 makepkg -si
 ```
 
+The package also installs the manual page:
+
+```bash
+man pf
+```
+
+### NixOS / Nix
+
+Run directly without installing:
+
+```bash
+nix run github:yok1rai/pretty_files
+```
+
+Or run directly from a local clone:
+
+```bash
+nix run
+```
+
+#### Install to profile
+
+```bash
+nix profile install github:yok1rai/pretty_files
+```
+
+#### Add to a Flake configuration
+
+```nix
+{
+  inputs = {
+    pretty_files.url = "github:yok1rai/pretty_files";
+  };
+
+  outputs = { self, nixpkgs, pretty_files }: {
+    # ...
+    # Access the package via:
+    # pretty_files.packages.${system}.default
+  };
+}
+```
+
 ### From Source
+
+#### Requirements
+
+- Rust toolchain
+
+#### Build from Source
 
 ```bash
 git clone https://github.com/yok1rai/pretty_files.git
@@ -42,10 +104,10 @@ cargo build --release
 The compiled binary will be available at:
 
 ```text
-target/release/pretty_files
+target/release/pf
 ```
 
-You can also install it with Cargo:
+You can also install it locally:
 
 ```bash
 cargo install --path .

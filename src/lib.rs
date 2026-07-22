@@ -121,7 +121,7 @@ impl Command {
                 "-S" => self.syntax_highlight = false,
                 "-n" | "--numbers" => self.count_lines = true,
 
-                "-i" | "--ignored" => {
+                "-i" | "--ignore" => {
                     if let Some(path) = args.next() {
                         ignored.push(path.clone());
                     } else {

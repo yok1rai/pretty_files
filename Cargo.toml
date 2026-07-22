@@ -1,6 +1,6 @@
 [package]
 name = "pretty_files"
-version = "2.5.0"
+version = "3.0.0"
 edition = "2024"
 
 description = "A simple terminal file viewer with syntax highlighting and binary viewing support"
@@ -25,7 +25,7 @@ categories = [
 exclude = [
     "target/",
     "*.pkg.tar.zst",
-    
+
 ]
 
 [[bin]]

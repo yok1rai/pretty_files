@@ -2,7 +2,18 @@
 
 All notable changes to **pretty_files** are documented in this file.
 
-> **Note:** During development, each milestone corresponded to a single commit. The project was officially released as **v1.4.0**, making it the first public release.
+> version **`3.0.0`** is the final release
+
+## [3.0.0] — Final Release
+
+### Added
+
+- Released on [crates.io](https://crates.io/crates/pretty_files)
+- Flake support
+
+### Changed
+
+- `--ignored` renamed to `--ignored`
 
 ## [2.5.1] — Tool renamed
 
@@ -14,7 +25,7 @@ All notable changes to **pretty_files** are documented in this file.
 # old way
 pretty_files src/
 # new way
-pf src/ 
+pf src/
 ```
 
 ## [2.5.0] — Automatic File Detection and Unified Reader
