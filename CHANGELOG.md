@@ -2,7 +2,13 @@
 
 All notable changes to **pretty_files** are documented in this file.
 
-> version **`3.0.0`** is the final release
+> version **`3.0.1`** is the final release
+
+## [3.0.1] — minor readme rewriting
+
+### fixed
+
+- version updated
 
 ## [3.0.0] — Final Release
 

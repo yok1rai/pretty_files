@@ -1,4 +1,4 @@
-# Pretty Files v2.5.0
+# Pretty Files v3.0.1
 
 **Pretty Files** is a lightweight command-line file viewer written in Rust. It provides syntax-highlighted text viewing, automatic binary inspection, recursive file searching, file path listing, and optional debugging features.
 

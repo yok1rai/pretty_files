@@ -1,6 +1,6 @@
 [package]
 name = "pretty_files"
-version = "3.0.0"
+version = "3.0.1"
 edition = "2024"
 
 description = "A simple terminal file viewer with syntax highlighting and binary viewing support"
