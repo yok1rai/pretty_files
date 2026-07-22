@@ -1,4 +1,4 @@
-const VERSION: &str = "v2.5.0";
+const VERSION: &str = env!("CARGO_PKG_VERSION");
 
 use crate::Command;
 
@@ -17,7 +17,8 @@ impl Command {
     }
 
     fn common_help(&self) {
-        println!(r#"pretty_files {VERSION} - Simple File Viewer
+        println!(
+            r#"pretty_files {VERSION} - Simple File Viewer
 
 USAGE:
     pf <COMMAND> [OPTIONS] <PATHS...>
@@ -37,11 +38,13 @@ EXAMPLES:
     pf help
     pf help text
     pf help binary
-"#);
+"#
+        );
     }
 
     fn text_help(&self) {
-        println!(r#"pf {VERSION} - Text Mode
+        println!(
+            r#"pf {VERSION} - Text Mode
 
 USAGE:
     pf [OPTIONS] <FILES...>
@@ -53,11 +56,13 @@ OPTIONS:
     -D                  Disable automatic debug mode
     -S                  Disable syntax highlighting
     -i, --ignore        Ignore files
-"#);
+"#
+        );
     }
 
     fn bare_help(&self) {
-        println!(r#"pretty_files {VERSION} - Bare Mode
+        println!(
+            r#"pretty_files {VERSION} - Bare Mode
 
 USAGE:
     pf bare [OPTIONS] <DIRECTORIES...>
@@ -65,11 +70,13 @@ USAGE:
 OPTIONS:
     -r, --recursive     Search recursively
     -i, --ignore        Ignore files
-"#);
+"#
+        );
     }
 
     fn binary_help(&self) {
-        println!(r#"pretty_files {VERSION} - Binary Mode
+        println!(
+            r#"pretty_files {VERSION} - Binary Mode
 
 USAGE:
     pf binary [OPTIONS] <FILES...>
@@ -79,7 +86,8 @@ OPTIONS:
     -d, --debug         Display filenames
     -D                  Disable automatic debug mode
     -i, --ignore        Ignore files
-"#);
+"#
+        );
     }
 
     pub fn version(&self) {

@@ -1,10 +1,7 @@
 use std::{fs, path::PathBuf, process};
 
-use content_inspector::{inspect, ContentType};
-use syntect::{
-    highlighting::ThemeSet,
-    parsing::SyntaxSet,
-};
+use content_inspector::{ContentType, inspect};
+use syntect::{highlighting::ThemeSet, parsing::SyntaxSet};
 
 #[derive(PartialEq)]
 enum Mode {
@@ -81,7 +78,7 @@ impl Command {
                             }
 
                             self.read_path(&file);
-                        },
+                        }
                         Err(e) => {
                             self.print_error(&file, e);
                             continue;
@@ -98,7 +95,7 @@ impl Command {
                 "help" => {
                     self.help();
                     process::exit(0);
-                },
+                }
                 "version" => self.version(),
                 "bare" => self.mode = Mode::Bare,
                 _ => {}
@@ -112,7 +109,7 @@ impl Command {
 
         let start = match self.args.get(1).map(String::as_str) {
             Some("bare" | "self" | "help" | "version") => 2,
-            _ => 1
+            _ => 1,
         };
 
         let mut args = self.args[start..].iter();
@@ -140,11 +137,7 @@ impl Command {
         (files, ignored)
     }
 
-    fn expand_recursive(
-        &self,
-        files: Vec<PathBuf>,
-        ignored: &[String],
-    ) -> Vec<PathBuf> {
+    fn expand_recursive(&self, files: Vec<PathBuf>, ignored: &[String]) -> Vec<PathBuf> {
         let mut result = Vec::new();
 
         for directory in files {
@@ -187,24 +180,15 @@ impl Command {
             }
 
             PermissionDenied => {
-                eprintln!(
-                    "You don't have permission to access `{}`",
-                    file.display()
-                );
+                eprintln!("You don't have permission to access `{}`", file.display());
             }
 
             InvalidData => {
-                eprintln!(
-                    "`{}` is a binary file (depreacted)",
-                    file.display()
-                );
+                eprintln!("`{}` is a binary file (depreacted)", file.display());
             }
 
             NotADirectory => {
-                eprintln!(
-                    "`{}` is not a directory",
-                    file.display()
-                ); 
+                eprintln!("`{}` is not a directory", file.display());
             }
 
             _ => {

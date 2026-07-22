@@ -1,5 +1,5 @@
-use walkdir::WalkDir;
 use std::path::{Path, PathBuf};
+use walkdir::WalkDir;
 pub fn recursive_search(root: impl AsRef<Path>, ignored: &[String]) -> Vec<PathBuf> {
     WalkDir::new(root)
         .into_iter()

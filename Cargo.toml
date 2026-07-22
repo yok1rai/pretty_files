@@ -3,13 +3,37 @@ name = "pretty_files"
 version = "2.5.0"
 edition = "2024"
 
+description = "A simple terminal file viewer with syntax highlighting and binary viewing support"
+license = "GPL-3.0"
+readme = "README.md"
+repository = "https://github.com/yourusername/pretty_files"
+homepage = "https://github.com/yourusername/pretty_files"
+
+keywords = [
+    "cli",
+    "terminal",
+    "file-viewer",
+    "syntax-highlighting",
+    "binary"
+]
+
+categories = [
+    "command-line-utilities",
+    "filesystem"
+]
+
+exclude = [
+    "target/",
+    "*.pkg.tar.zst",
+    
+]
 
 [[bin]]
 name = "pf"
 path = "src/main.rs"
 
-
 [dependencies]
 walkdir = "2"
 syntect = { version = "5", default-features = false, features = ["default-fancy"] }
 content_inspector = "0.2"
+
