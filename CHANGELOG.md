@@ -4,7 +4,7 @@ All notable changes to **pretty_files** are documented in this file.
 
 > version **`3.0.x`** is the final release
 
-## [3.0.2] — minor bare mode fix 
+## [3.0.5] — minor bare mode fix
 
 ### Fixed
 

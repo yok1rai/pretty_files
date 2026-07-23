@@ -1,13 +1,13 @@
 [package]
 name = "pretty_files"
-version = "3.0.5"
+version = "3.0.6"
 edition = "2024"
 
 description = "A simple terminal file viewer with syntax highlighting and binary viewing support"
 license = "GPL-3.0"
 readme = "README.md"
-repository = "https://github.com/yourusername/pretty_files"
-homepage = "https://github.com/yourusername/pretty_files"
+repository = "https://github.com/yok1rai/pretty_files"
+homepage = "https://github.com/yok1rai/pretty_files"
 
 keywords = [
     "cli",
