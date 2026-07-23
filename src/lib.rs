@@ -61,9 +61,15 @@ impl Command {
 
         match self.mode {
             Mode::Bare => {
-                for directory in files {
-                    if let Err(e) = self.bare_read(&directory) {
-                        self.print_error(&directory, e);
+                if self.recursive {
+                    for file in files {
+                        println!("{}", file.display());
+                    }
+                } else {
+                    for directory in files {
+                        if let Err(e) = self.bare_read(&directory) {
+                            self.print_error(&directory, e);
+                        }
                     }
                 }
             }

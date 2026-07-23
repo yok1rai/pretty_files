@@ -1,5 +1,5 @@
 pkgname='pf'
-pkgver=2.5.0.r30.3102c9d
+pkgver=3.0.2.r34.97d6806
 pkgrel=1
 pkgdesc='A lightweight cat-like terminal file viewer with syntax highlighting and automatic binary detection'
 arch=('x86_64')

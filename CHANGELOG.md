@@ -2,7 +2,13 @@
 
 All notable changes to **pretty_files** are documented in this file.
 
-> version **`3.0.1`** is the final release
+> version **`3.0.x`** is the final release
+
+## [3.0.2] — minor bare mode fix 
+
+### Fixed
+
+- Fixed `bare` mode printing `is not a directory` errors for every file when combined with `-r` / `--recursive`. Recursive `bare` now prints the already-discovered file paths directly instead of re-running directory reads on them.
 
 ## [3.0.1] — minor readme rewriting
 
